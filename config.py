@@ -8,8 +8,7 @@ TOKEN_FILE = "token.json"
 
 # Gmail OAuth scopes
 GMAIL_SCOPES = [
-    "https://www.googleapis.com/auth/gmail.modify",
-    "https://www.googleapis.com/auth/gmail.readonly",
+    "https://mail.google.com/",
 ]
 
 # Gemini model for AI classification
