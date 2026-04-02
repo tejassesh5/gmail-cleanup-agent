@@ -3,6 +3,24 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 
+def query_spam() -> str:
+    return "category:spam OR label:spam"
+
+def query_promotions() -> str:
+    return "category:promotions"
+
+def query_ads() -> str:
+    return 'category:promotions (subject:"% off" OR subject:"sale" OR subject:"deal" OR subject:"offer" OR subject:"discount" OR subject:"coupon" OR subject:"limited time" OR subject:"flash sale" OR subject:"buy now" OR subject:"shop now")'
+
+def query_newsletters() -> str:
+    return 'category:promotions (subject:"newsletter" OR subject:"digest" OR subject:"weekly" OR subject:"monthly" OR subject:"roundup" OR subject:"update" OR subject:"bulletin")'
+
+def query_social_notifications() -> str:
+    return "category:social"
+
+def query_automated_notifications() -> str:
+    return 'category:updates (subject:"alert" OR subject:"notification" OR subject:"reminder" OR subject:"confirm" OR subject:"receipt" OR subject:"invoice" OR subject:"order" OR subject:"delivery" OR subject:"shipped")'
+
 def query_spam_promotions() -> str:
     return "category:promotions OR category:spam OR label:spam"
 
