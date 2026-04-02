@@ -28,17 +28,16 @@ def confirm(prompt: str) -> bool:
     return input(f"{prompt} [y/N]: ").strip().lower() == "y"
 
 
-def preview_emails(service, ids, limit=20):
+def preview_emails(service, ids, limit=None):
     """Print a preview table of emails before deletion."""
     print(f"\n  {'#':<4} {'From':<35} {'Subject':<45}")
     print(f"  {'-'*4} {'-'*35} {'-'*45}")
-    for i, msg_id in enumerate(ids[:limit], 1):
+    show = ids if limit is None else ids[:limit]
+    for i, msg_id in enumerate(show, 1):
         h = get_message_headers(service, msg_id)
         sender = h.get("From", "unknown")[:33]
         subject = h.get("Subject", "(no subject)")[:43]
         print(f"  {i:<4} {sender:<35} {subject:<45}")
-    if len(ids) > limit:
-        print(f"  ... and {len(ids) - limit} more")
     print()
 
 
