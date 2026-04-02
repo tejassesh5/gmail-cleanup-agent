@@ -28,13 +28,28 @@ def confirm(prompt: str) -> bool:
     return input(f"{prompt} [y/N]: ").strip().lower() == "y"
 
 
+def preview_emails(service, ids, limit=20):
+    """Print a preview table of emails before deletion."""
+    print(f"\n  {'#':<4} {'From':<35} {'Subject':<45}")
+    print(f"  {'-'*4} {'-'*35} {'-'*45}")
+    for i, msg_id in enumerate(ids[:limit], 1):
+        h = get_message_headers(service, msg_id)
+        sender = h.get("From", "unknown")[:33]
+        subject = h.get("Subject", "(no subject)")[:43]
+        print(f"  {i:<4} {sender:<35} {subject:<45}")
+    if len(ids) > limit:
+        print(f"  ... and {len(ids) - limit} more")
+    print()
+
+
 def run_spam_cleanup(service):
     print("\n[1/4] Scanning spam & promotions...")
     ids = fetch_message_ids(service, query_spam_promotions())
     if not ids:
         print("  Nothing found.")
         return 0
-    print(f"  Found {len(ids)} emails.")
+    print(f"  Found {len(ids)} emails. Fetching preview...")
+    preview_emails(service, ids)
     if confirm(f"  Permanently delete all {len(ids)} spam/promotion emails?"):
         deleted = batch_delete(service, ids)
         print(f"  Deleted {deleted} emails.")
@@ -102,7 +117,8 @@ def run_old_email_cleanup(service):
     if not ids:
         print("  Nothing found.")
         return 0
-    print(f"  Found {len(ids)} emails older than {days} days.")
+    print(f"  Found {len(ids)} emails older than {days} days. Fetching preview...")
+    preview_emails(service, ids)
     if confirm(f"  Permanently delete all {len(ids)} old emails?"):
         deleted = batch_delete(service, ids)
         print(f"  Deleted {deleted} emails.")
@@ -119,7 +135,8 @@ def run_large_attachment_cleanup(service):
         print("  Nothing found.")
         return 0
 
-    print(f"  Found {len(ids)} large-attachment emails.")
+    print(f"  Found {len(ids)} large-attachment emails. Fetching preview...")
+    preview_emails(service, ids)
     print("  Sampling top emails for AI review...")
 
     sample = ids[:10]
